@@ -1,11 +1,17 @@
-"use client"; // Ensuring this HOC is a Client Component
+"use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ComponentType } from "react";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "../LoadingSpinner";
 
-const withLoginAuth = (WrappedComponent: any) => {
-  return (props: any) => {
+function getDisplayName(WrappedComponent: ComponentType<any>) {
+  return WrappedComponent.displayName || WrappedComponent.name || "Component";
+}
+
+const withLoginAuth = <P extends object>(
+  WrappedComponent: ComponentType<P>
+) => {
+  const WithLoginAuth: React.FC<P> = (props) => {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -16,7 +22,7 @@ const withLoginAuth = (WrappedComponent: any) => {
       } else {
         router.push("/member/login");
       }
-    }, []);
+    }, [router]); // Added router to the dependency array
 
     if (!isAuthenticated) {
       return (
@@ -28,6 +34,11 @@ const withLoginAuth = (WrappedComponent: any) => {
 
     return <WrappedComponent {...props} />;
   };
+
+  WithLoginAuth.displayName = `WithLoginAuth(${getDisplayName(
+    WrappedComponent
+  )})`;
+  return WithLoginAuth;
 };
 
 export default withLoginAuth;
