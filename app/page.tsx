@@ -17,7 +17,7 @@ export default function Home() {
             height={1000}
             width={1000}
             alt="patient"
-            className=" h-10 w-fit"
+            className=" h-12 w-fit"
           />
 
           <NavigationMenuDemo />
@@ -27,15 +27,19 @@ export default function Home() {
             <div className=" items-center">
               <div className="">
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                  Simple solutions to manage your business
+                  Streamline Your Gym Management
                 </h1>
                 <p className="text-14-regular mb-6">
-                  Collect payments, access loans and manage operations with a
-                  business banking solution that meets all your needs.
+                  Track memberships, schedule classes, and optimize operations
+                  with our comprehensive gym management solution.
                 </p>
-                <button className="bg-blue-500 text-white px-6 py-3 rounded-md text-14-regular">
-                  Open an Account →
-                </button>
+                {/* Elevate your fitness business to new heights. */}
+                <Link
+                  href="/register-gym"
+                  className="bg-blue-500 text-white px-6 py-3 rounded-md text-14-regular"
+                >
+                  Get Started →
+                </Link>
               </div>
             </div>
           </main>
@@ -44,7 +48,7 @@ export default function Home() {
             <p className="justify-items-end text-dark-600 xl:text-left">
               © 2024 CarePluse
             </p>
-            <Link href="/?admin=true" className="text-green-500">
+            <Link href="/login-admin" className="text-green-500">
               Admin
             </Link>
           </div>
