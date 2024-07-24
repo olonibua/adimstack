@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 // import { getPatient, getUser } from "@/lib/actions/patient.actions";
 // import MemberForm from "@/components/forms/MemberForm";
 
-const Register = async ({ params: { memberId } }: SearchParamProps) => {
+const Register = ({ params: { memberId } }: SearchParamProps) => {
   const member: any = 0;
 
 //   const patient = await getPatient(memberId);

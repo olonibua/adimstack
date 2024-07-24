@@ -8,7 +8,7 @@ import { getGym } from "@/lib/actions/gym.action";
 import { useEffect } from "react";
 import { getMember } from "@/lib/actions/member.actions";
 
-const RequestSuccess = async ({
+const RequestSuccess = ({
   params: { memberId, planId },
 }: {
   params: { memberId: any; planId: string };
