@@ -23,8 +23,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import "react-phone-number-input/style.css";
 import CustomFormField, { FormFieldType } from "../../CustomFormField";
 import SubmitButton from "../../SubmitButton";
-import { FileUploader } from "../../FileUploader";
-import LoadingSpinner from "@/components/LoadingSpinner";
 
 export const MemberForm = ({ gymId }: any) => {
   const router = useRouter();

@@ -19,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { decryptKey } from "@/lib/utils";
 
 interface BirthDayDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

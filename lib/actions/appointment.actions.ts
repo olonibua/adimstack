@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 import { Appointment } from "@/types/appwrite.types";
 
 import {
-  APPOINTMENT_COLLECTION_ID,
   DATABASE_ID,
   // databases,
   // messaging,

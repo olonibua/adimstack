@@ -15,8 +15,8 @@ export const createAdmin = async (admin: CreateAdminParams) => {
 
     // Create a document in the database with all required fields
     const adminDoc = await databases.createDocument(
-      DATABASE_ID,
-      ADMIN_COLLECTION_ID,
+      DATABASE_ID as string,
+      ADMIN_COLLECTION_ID as string,
       newAdmin.$id,
       {
         gymId: admin.gymId,
