@@ -59,9 +59,7 @@ const GymForm = () => {
     }
   };
 
-   if (isLoading) {
-     return <LoadingSpinner />;
-   }
+   
 
   return (
     <Form {...form}>

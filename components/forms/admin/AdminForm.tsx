@@ -67,9 +67,7 @@ const AdminForm = ({ gymId }: { gymId?: string }) => {
     setIsLoading(false);
   };
 
-   if (isLoading) {
-     return <LoadingSpinner />;
-   }
+  
 
   return (
     <Form {...form}>

@@ -1,12 +1,20 @@
-"use client"; // Marking this as a Client Component
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { StatCard } from "@/components/StatCard";
 import withAdminAuth from "@/components/hoc/withAdminAuth";
-import { addSubscriptionPlan, fetchAllSubscription, getGym, getGymSubscriptionPlans } from "@/lib/actions/gym.action";
-import { fetchUserSubscription, getMembers } from "@/lib/actions/member.actions";
+import {
+  addSubscriptionPlan,
+  fetchAllSubscription,
+  getGym,
+  getGymSubscriptionPlans,
+} from "@/lib/actions/gym.action";
+import {
+  fetchUserSubscription,
+  getMembers,
+} from "@/lib/actions/member.actions";
 import { memberColumns } from "@/components/table/memberColumns";
 import { MemberDataTable } from "@/components/table/MemberDataTable";
 import { AllMemberData } from "@/components/table/AllMember/AllMemberData";
@@ -16,126 +24,85 @@ import { pausedSubscriptionColumns } from "@/components/table/pausedSubscription
 import { BirthDayDataTable } from "@/components/table/monthlyCelebrants/BirthdayDataTable";
 import { birthdayColumns } from "@/components/table/monthlyCelebrants/birthdayColumns";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { NavigationMenuContent } from "@/components/ui/navigation-menu";
 import { NavigationMenuDemo } from "@/components/Navigation";
 import { SubscriptionPlanDataTable } from "@/components/table/subscriptionPlan/SubscriptionPlanDataTable";
 import { subscriptionPlanColumns } from "@/components/table/subscriptionPlan/subscriptionPlanColumns";
 import { Input } from "@/components/ui/input";
 
+interface SearchParamProps {
+  params: {
+    gymId: string;
+  };
+}
+
 const AdminPage = ({ params: { gymId } }: SearchParamProps) => {
   const [member, setMember] = useState<any[]>([]);
   const [subscription, setSubscription] = useState<any>(null);
-  const [hasActiveSubscription, setHasActiveSubscription] = useState(false); // New state for tracking active subscription
-   const [birthdaysCount, setBirthdaysCount] = useState(0);
-    const [activeStat, setActiveStat] = useState("allMembers");
-    const [isLoading, setIsLoading] = useState(true);
-      const [refreshTrigger, setRefreshTrigger] = useState(0);
-   const [plans, setPlans] = useState([]);
-   const [allMembersSearchQuery, setAllMembersSearchQuery] =
-     useState<string>("");
-   const [subscribedMembersSearchQuery, setSubscribedMembersSearchQuery] =
-     useState<string>("");
-
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [birthdaysCount, setBirthdaysCount] = useState(0);
+  const [activeStat, setActiveStat] = useState("allMembers");
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [plans, setPlans] = useState([]);
+  const [allMembersSearchQuery, setAllMembersSearchQuery] =
+    useState<string>("");
+  const [subscribedMembersSearchQuery, setSubscribedMembersSearchQuery] =
+    useState<string>("");
+  const [gym, setGym] = useState<any>(null);
 
   useEffect(() => {
-    const fetchMembers = async () => {
+    const fetchAllData = async () => {
+      setIsLoading(true);
       try {
-        const fetchedMembers = await getMembers(gymId);
-        setMember(fetchedMembers.documents); // Extracting documents array
+        const [fetchedMembers, sub, gymData, fetchedPlans] = await Promise.all([
+          getMembers(gymId),
+          fetchAllSubscription(gymId),
+          getGym(gymId),
+          getGymSubscriptionPlans(gymId),
+        ]);
 
+        setMember(fetchedMembers.documents);
+        setSubscription(sub);
+        setGym(gymData);
+        setPlans(fetchedPlans);
+
+        // Calculate birthdays
         const today = new Date();
         const currentMonth = today.getMonth();
-
         const birthdaysThisMonth = fetchedMembers.documents.filter(
           (member: any) => {
             const birthDate = new Date(member.birthDate);
             return birthDate.getMonth() === currentMonth;
           }
         );
-
         setBirthdaysCount(birthdaysThisMonth.length);
+
+        // Check for active subscriptions
+        setHasActiveSubscription(
+          !!sub &&
+            sub.documents.some(
+              (doc: any) => doc.status === "active" || doc.status === "paused"
+            )
+        );
       } catch (error) {
-      } finally{
-        setIsLoading(false)
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchMembers();
-  }, [gymId]);
+    fetchAllData();
+  }, [gymId, refreshTrigger]);
 
-  useEffect(() => {
-    const getSubscription = async () => {
-      try {
-        const sub: any = await fetchAllSubscription(gymId);
-        setSubscription(sub);
-        if (
-          sub &&
-          sub.documents.some(
-            (doc: any) => doc.status === "active" || doc.status === "paused"
-          )
-        ) {
-          setHasActiveSubscription(true);
-        } else {
-          setHasActiveSubscription(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getSubscription();
-  }, [gymId]);
-
-  const [gym, setGym] = useState<any>([]);
-
-  useEffect(() => {
-    const fetchGym = async () => {
-      if (gymId) {
-        const gymData = await getGym(gymId);
-        setGym(gymData);
-      }
-    };
-
-    fetchGym();
-  }, [gymId]);
-
-  // Calculate the counts
-  const allMembers = member.length;
-  const subscribedMembers = subscription && subscription.total ? subscription.total : [];
-const pausedMembersArray =
-  subscription && subscription.documents
-    ? subscription.documents.filter((doc: any) => doc.status === "paused")
-    : [];
-const plansCount = plans.length
-const pausedMembersCount = pausedMembersArray.length; 
   const handleStatCardClick = (statType: string) => {
     setActiveStat(statType);
   };
 
-   const handleSubscriptionUpdate = () => {
-     setRefreshTrigger((prev) => prev + 1);
-   };
+  const handleSubscriptionUpdate = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
-
-
-   useEffect(() => {
-     const fetchPlans = async () => {
-       try {
-         const fetchedPlans = await getGymSubscriptionPlans(gymId);
-         setPlans(fetchedPlans);
-       } catch (err) {
-         //  setError(err.message);
-         setIsLoading(false);
-       }
-     };
-
-     fetchPlans();
-   }, [gymId, refreshTrigger]);
-
-
-  const PlanColumns = subscriptionPlanColumns(gymId,
-    handleSubscriptionUpdate,
-  );
+  const PlanColumns = subscriptionPlanColumns(gymId, handleSubscriptionUpdate);
 
   const handleAllMembersSearchChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -149,29 +116,31 @@ const pausedMembersCount = pausedMembersArray.length;
     setSubscribedMembersSearchQuery(e.target.value);
   };
 
+  const filteredAllMembersData = member.filter((member: any) => {
+    return member.name
+      .toLowerCase()
+      .includes(allMembersSearchQuery.toLowerCase());
+  });
 
- const filteredAllMembersData = member.filter((member: any) => {
-   return member.name
-     .toLowerCase()
-     .includes(allMembersSearchQuery.toLowerCase());
- });
-
- const filteredSubscribedMembersData =
-   subscription?.documents?.filter((member: any) => {
-     return member.name
-       .toLowerCase()
-       .includes(subscribedMembersSearchQuery.toLowerCase());
-   }) || [];
-
-
-  // const filterSearch = (searchWord, memberData) = > {
-  //   const filter = searchWord.toLowerCase
-  // }
-
+  const filteredSubscribedMembersData =
+    subscription?.documents?.filter((member: any) => {
+      return member.name
+        .toLowerCase()
+        .includes(subscribedMembersSearchQuery.toLowerCase());
+    }) || [];
 
   if (isLoading) {
     return <LoadingSpinner />;
   }
+
+  const allMembers = member.length;
+  const subscribedMembers =
+    subscription && subscription.total ? subscription.total : 0;
+  const pausedMembersArray =
+    subscription?.documents?.filter((doc: any) => doc.status === "paused") ||
+    [];
+  const plansCount = plans.length;
+  const pausedMembersCount = pausedMembersArray.length;
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
@@ -191,7 +160,7 @@ const pausedMembersCount = pausedMembersArray.length;
       <main className="admin-main">
         <section className="w-full space-y-4">
           <h1 className="header">
-            Welcome! {gym && gym.name ? gym.name : "Gym"} Adminstrator 👋
+            Welcome! {gym && gym.name ? gym.name : "Gym"} Administrator 👋
           </h1>
           <p className="text-dark-700">
             Start the day with managing new members
@@ -207,7 +176,6 @@ const pausedMembersCount = pausedMembersArray.length;
             onClick={() => handleStatCardClick("allMembers")}
             isActive={activeStat === "allMembers"}
           />
-
           <StatCard
             type="pending"
             count={subscribedMembers}
@@ -216,7 +184,6 @@ const pausedMembersCount = pausedMembersArray.length;
             onClick={() => handleStatCardClick("subscribedMembers")}
             isActive={activeStat === "subscribedMembers"}
           />
-
           <StatCard
             type="cancelled"
             count={birthdaysCount}
@@ -233,7 +200,6 @@ const pausedMembersCount = pausedMembersArray.length;
             onClick={() => handleStatCardClick("pausedMembers")}
             isActive={activeStat === "pausedMembers"}
           />
-
           <StatCard
             type="pending"
             count={plansCount}
@@ -274,7 +240,6 @@ const pausedMembersCount = pausedMembersArray.length;
             />
           </>
         )}
-
         {activeStat === "pausedMembers" && (
           <PauseSubscriptionDataTable
             columns={pausedSubscriptionColumns}
@@ -301,11 +266,9 @@ const pausedMembersCount = pausedMembersArray.length;
                 const aBirthDate = new Date(a.birthDate);
                 const bBirthDate = new Date(b.birthDate);
 
-                // Set year to current year for comparison
                 aBirthDate.setFullYear(today.getFullYear());
                 bBirthDate.setFullYear(today.getFullYear());
 
-                // If birthday has passed this year, set to next year
                 if (aBirthDate < today)
                   aBirthDate.setFullYear(today.getFullYear() + 1);
                 if (bBirthDate < today)

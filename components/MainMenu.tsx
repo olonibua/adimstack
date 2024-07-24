@@ -78,8 +78,8 @@ export function NavigationMenuDemo() {
                       adimstack
                     </div>
                     <p className="text-sm leading-tight text-muted-foreground">
-                      Beautifully designed management app you can use to
-                      manage your gym. Accessible & Customizable.
+                      Beautifully designed management app you can use to manage
+                      your gym. Accessible & Customizable.
                     </p>
                   </a>
                 </NavigationMenuLink>
@@ -87,12 +87,12 @@ export function NavigationMenuDemo() {
               <ListItem href="/register-gym" title="Register your Gym">
                 Manage all that has to do with your gym.
               </ListItem>
-              <ListItem href="/login-admin" title="Admin">
-                Login as gym Admin.
+              <ListItem href="/login-admin" title="">
+                Admin Login
               </ListItem>
-              {/* <ListItem href="/docs/primitives/typography" title="Typography">
-                Styles for headings, paragraphs, lists...etc
-              </ListItem> */}
+              <ListItem href="/login-member" title="">
+                Member login
+              </ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>

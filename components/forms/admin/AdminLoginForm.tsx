@@ -49,9 +49,6 @@ const AdminLoginForm = () => {
     }
   };
 
-   if (isLoading) {
-     return <LoadingSpinner />;
-   }
 
 
   return (

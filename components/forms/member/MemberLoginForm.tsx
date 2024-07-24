@@ -51,9 +51,7 @@ const MemberLoginForm = () => {
     }
   };
 
-   if (isLoading) {
-     return <LoadingSpinner />;
-   }
+   
 
   return (
     <Form {...form}>

@@ -113,15 +113,14 @@ const MembersPage = ({
             className="h-8 w-fit"
           />
         </Link>
-        <Link
-          href={`/register-member?gymId=${member?.gymId}`}
+        <h3
           className="text-16-semibold"
         >
           {gym?.name
             ? gym.name.charAt(0).toUpperCase() + gym.name.slice(1)
             : "Guest"}{" "}
           Gym!
-        </Link>
+        </h3>
       </header>
 
       <main className="admin-main">
