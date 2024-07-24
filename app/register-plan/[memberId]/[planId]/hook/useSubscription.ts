@@ -58,7 +58,6 @@ export const useSubscription = (
 
   const handlePayment = async () => {
     if (!planDetails || !gymData) {
-      console.log("Plan details or gym data is missing");
       return;
     }
 

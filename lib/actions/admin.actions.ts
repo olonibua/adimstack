@@ -1,9 +1,7 @@
 import { ID } from "node-appwrite";
-import { account, databases, users } from "../appwrite.config";
+import { account, ADMIN_COLLECTION_ID, DATABASE_ID, databases, users } from "../appwrite.config";
 import { parseStringify } from "../utils";
 
-const DATABASE_ID = "6696a212000f5bdb0e1b";
-const ADMIN_COLLECTION_ID = "6696a4c00002b2fcfad6";
 
 
 export const createAdmin = async (admin: CreateAdminParams) => {

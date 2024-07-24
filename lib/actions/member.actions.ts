@@ -4,24 +4,15 @@ import { AppwriteException, ID, Query } from "node-appwrite";
 
 import {
   account,
-  // BUCKET_ID,
-  // DATABASE_ID,
-  // ENDPOINT,
-  // PROJECT_ID,
+  DATABASE_ID,
   databases,
-  ENDPOINT,
-  PROJECT_ID,
-  storage,
+  GYM_COLLECTION_ID,
+  MEMBER_COLLECTION_ID,
   SUBSCRIPTION_COLLECTION_ID,
-  users,
+
 } from "../appwrite.config";
 import { parseStringify } from "../utils";
 
-
-const DATABASE_ID = "6696a212000f5bdb0e1b";
-const GYM_COLLECTION_ID = "6696a472003e09556dd7";
-const MEMBER_COLLECTION_ID = "6696a4f30005f23d9e82";
-const BUCKET_ID = "6696a56a003cb76f1b48";
 
 
 
@@ -112,8 +103,8 @@ export const getMember = async (memberId: string) => {
 export const getGymDataByPlanId = async (planId: string) => {
   try {
     const response = await databases.listDocuments(
-      DATABASE_ID,
-      GYM_COLLECTION_ID
+      DATABASE_ID as string,
+      GYM_COLLECTION_ID as string
     );
 
     // Log the structure of the first document to check the data format
@@ -144,8 +135,8 @@ export const getGymDataByPlanId = async (planId: string) => {
 export const fetchUserSubscription = async (memberId: any) => {
   try {
     const response = await databases.listDocuments(
-      DATABASE_ID,
-      SUBSCRIPTION_COLLECTION_ID,
+      DATABASE_ID as string,
+      SUBSCRIPTION_COLLECTION_ID as string,
       [Query.equal("memberId", memberId)]
     );
     return response;

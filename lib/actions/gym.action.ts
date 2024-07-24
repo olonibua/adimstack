@@ -1,15 +1,6 @@
 import { ID, Query } from "node-appwrite";
-import { databases, SUBSCRIPTION_COLLECTION_ID, users } from "../appwrite.config";
+import { DATABASE_ID, databases, GYM_COLLECTION_ID, SUBSCRIPTION_COLLECTION_ID, users } from "../appwrite.config";
 import { parseStringify } from "../utils";
-// import {
-//   GYM_COLLECTION_ID,
-//   DATABASE_ID,
-//   // databases,
-//   // messaging,
-// } from "../appwrite.config";
-
-const DATABASE_ID= '6696a212000f5bdb0e1b'
-const GYM_COLLECTION_ID='6696a472003e09556dd7'
 
 export const createGym = async (gym: CreateGymParams) => {
   try {
@@ -85,8 +76,8 @@ export const getGym = async (gymId: string) => {
 export const fetchAllSubscription = async (gymId: any) => {
   try {
     const response = await databases.listDocuments(
-      DATABASE_ID,
-      SUBSCRIPTION_COLLECTION_ID,
+      DATABASE_ID as string,
+      SUBSCRIPTION_COLLECTION_ID as string,
       [Query.equal("gymId", gymId)]
     );
 

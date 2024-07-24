@@ -14,8 +14,8 @@ enum SubscriptionStatus {
 export const createMemberSubscription = async (subscriptionDetails: any) => {
   // Check for existing active subscriptions
   const existingSubscriptions = await databases.listDocuments(
-    DATABASE_ID,
-    SUBSCRIPTION_COLLECTION_ID, // your collection name
+    DATABASE_ID as string,
+    SUBSCRIPTION_COLLECTION_ID as string, // your collection name
     [
       Query.equal("memberId", subscriptionDetails.memberId),
       Query.greaterThan("endDate", new Date().toISOString()),
@@ -68,8 +68,8 @@ export const createMemberSubscription = async (subscriptionDetails: any) => {
 
   try {
     const result = await databases.createDocument(
-      DATABASE_ID,
-      SUBSCRIPTION_COLLECTION_ID,
+      DATABASE_ID as string,
+      SUBSCRIPTION_COLLECTION_ID as string,
       subscriptionId,
       subscriptionDocument
     );
@@ -89,8 +89,8 @@ export const pauseSubscription = async (
 ) => {
   try {
     const subscription = await databases.getDocument(
-      DATABASE_ID,
-      SUBSCRIPTION_COLLECTION_ID,
+      DATABASE_ID as string,
+      SUBSCRIPTION_COLLECTION_ID as string,
       subscriptionId
     );
 
@@ -101,8 +101,8 @@ export const pauseSubscription = async (
     ).toISOString();
 
     await databases.updateDocument(
-      DATABASE_ID,
-      SUBSCRIPTION_COLLECTION_ID,
+      DATABASE_ID as string,
+      SUBSCRIPTION_COLLECTION_ID as string,
       subscriptionId,
       {
         status: "paused",
@@ -121,8 +121,8 @@ export const pauseSubscription = async (
 export const resumeSubscription = async (subscriptionId: string) => {
   try {
     await databases.updateDocument(
-      DATABASE_ID,
-      SUBSCRIPTION_COLLECTION_ID,
+      DATABASE_ID as string,
+      SUBSCRIPTION_COLLECTION_ID as string,
       subscriptionId,
       {
         status: "active",
