@@ -9,7 +9,8 @@ import SubmitButton from "../../SubmitButton";
 import CustomFormField, { FormFieldType } from "../../CustomFormField";
 import { Form } from "../../ui/form";
 import { getMember, loginMember } from "@/lib/actions/member.actions";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const MemberLoginValidation = z.object({
   email: z.string().email("Invalid email address"),
@@ -19,6 +20,7 @@ const MemberLoginValidation = z.object({
 const MemberLoginForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
     resolver: zodResolver(MemberLoginValidation),
@@ -46,6 +48,10 @@ const MemberLoginForm = () => {
       }
     } catch (error) {
       console.error("Login failed:", error);
+            setError(
+              "Login failed. Please check your credentials and try again."
+            );
+
     } finally {
       setIsLoading(false);
     }
@@ -57,6 +63,13 @@ const MemberLoginForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <h1>Member Login</h1>
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
         <CustomFormField
           fieldType={FormFieldType.INPUT}
           control={form.control}
