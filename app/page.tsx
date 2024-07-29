@@ -18,7 +18,7 @@ export default function Home() {
               height={1000}
               width={1000}
               alt="patient"
-              className="h-12 w-auto"
+              className="h-6 md:h-12 w-auto"
             />
             <NavigationMenuDemo />
           </div>
