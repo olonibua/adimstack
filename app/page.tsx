@@ -10,7 +10,8 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="flex flex-col lg:flex-row h-screen">
-      <section className="flex-1 overflow-y-auto">
+      <section className="flex-1 overflow-y-auto antialiased">
+        <div className="absolute inset-0 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)]"></div>
         <div className="container h-full flex flex-col">
           <div className="flex justify-between items-center p-5">
             <Image
